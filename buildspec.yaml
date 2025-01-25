@@ -3,6 +3,8 @@ version: 0.2
 phases:
   pre_build:
     commands:
+      - DOCKER_PASSWORD=docker@2024
+      - DOCKER_USERNAME=gowridockerhub
       - echo "Logging in to Amazon ECR..."
       - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/z4l8s4p8
       - echo "Starting Gradle build to package the application..."
