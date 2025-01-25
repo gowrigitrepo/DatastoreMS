@@ -6,9 +6,10 @@ phases:
       - DOCKER_PASSWORD=docker@2024
       - DOCKER_USERNAME=gowridockerhub
       - echo "Logging in to Amazon ECR..."
-      - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/z4l8s4p8
+      - REPOSITORY_URI=public.ecr.aws/z4l8s4p8
+      - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin $REPOSITORY_URI
       - echo "Starting Gradle build to package the application..."
-      - gradlew clean build# Customize this as needed for your Gradle project
+      - gradlew clean build # Customize this as needed for your Gradle project
   build:
     commands:
       - echo "Building the Docker image..."
