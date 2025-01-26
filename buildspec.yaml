@@ -8,6 +8,7 @@ phases:
       - chmod +x gradlew
       - ./gradlew clean build
       - echo "Logging in to Amazon ECR..."
+      - aws --version
       - REPOSITORY_URI=public.ecr.aws/z4l8s4p8
       - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin $REPOSITORY_URI
       - echo "Starting Gradle build to package the application..."
