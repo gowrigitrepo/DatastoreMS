@@ -15,17 +15,18 @@ phases:
       - echo "Building the Docker image..."
       - IMAGE_TAG=latest
       - IMAGE_REPO_NAME=taf/datastore-repo # Replace with your repository name
-      - AWS_ACCOUNT_ID=047719647736
+      - REPOSITORY_URI=public.ecr.aws/z4l8s4p8
       - AWS_REGION=us-east-1
       - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
       - echo "Tagging the Docker image..."
-      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $REPOSITORY_URI/$IMAGE_REPO_NAME:$IMAGE_TAG
   post_build:
     commands:
       - echo "Pushing the Docker image to Amazon ECR..."
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$REPOSITORY_URI/$IMAGE_REPO_NAME:$IMAGE_TAG
       - echo "Writing image definitions..."
-      - printf '[{"name":"%s","imageUri":"%s"}]' "$IMAGE_REPO_NAME" "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG" > imagedefinitions.json
+      - DOCKER_CONTAINER_NAME=tafdatastore
+      - printf '[{"name":"%s","imageUri":"%s"}]' $DOCKER_CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG" > imagedefinitions.json
 artifacts:
   files:
     - imagedefinitions.json
