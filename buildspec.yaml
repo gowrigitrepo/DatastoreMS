@@ -7,6 +7,7 @@ phases:
       - echo "Starting Gradle build to package the application..."
       - ./gradlew clean build
       - echo "Logging in to Amazon ECR..."
+      - REPOSITORY_URI=.dkr.ecr.us-east-1.amazonaws.com
       - aws --version
       - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin $REPOSITORY_URI
   build:
@@ -14,7 +15,6 @@ phases:
       - echo "Building the Docker image..."
       - IMAGE_TAG=latest
       - IMAGE_REPO_NAME=taf/datastore-repo # Replace with your repository name
-      - REPOSITORY_URI=.dkr.ecr.us-east-1.amazonaws.com
       - AWS_REGION=us-east-1
       - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
   post_build:
