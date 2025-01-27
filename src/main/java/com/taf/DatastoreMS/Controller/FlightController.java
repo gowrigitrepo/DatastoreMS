@@ -1,43 +1,40 @@
 package com.taf.DatastoreMS.Controller;
 
 import com.taf.DatastoreMS.Model.Flight;
-import com.taf.DatastoreMS.Service.FlightServiceImpl;
+import com.taf.DatastoreMS.Repository.FlightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
-@RestController
-@RequestMapping("/flights")
+
 public class FlightController {
-
     @Autowired
-    private FlightServiceImpl flightServiceImpl;
+    private final FlightRepository flightRepository;
 
-    @GetMapping
-    public List<Flight> getAllFlights() {
-        return flightServiceImpl.getAllFights();
+    public FlightController(FlightRepository flightRepository) {
+        this.flightRepository = flightRepository;
     }
 
-    @GetMapping("/{flightId}")
-    public Optional<Flight> getFlightById(@PathVariable Long flightId) {
-        return flightServiceImpl.getFlightById(flightId);
+    public List<Flight> getAllFights() {
+        return flightRepository.findAll();
     }
 
-    @PostMapping
-    public Flight addFlight(@RequestBody Flight flight) {
-        return flightServiceImpl.addFlight(flight);
+    public Optional<Flight> getFlightById(Long flightId) {
+        return flightRepository.findById(flightId);
     }
 
-    @PutMapping("/{flightId}")
-    public Flight updateFlight(@PathVariable Long flightId,@RequestBody Flight flight) {
-        return flightServiceImpl.updateFlight(flight);
+    public Flight addFlight(Flight flight) {
+        return flightRepository.save(flight);
     }
 
-    @DeleteMapping("/{flightId}")
-    public void deleteFlightById(@PathVariable Long flightId) {
-        flightServiceImpl.deleteFlightById(flightId);
+    public Flight updateFlight(Flight flight) {
+        return flightRepository.save(flight);
+    }
+
+    public void deleteFlightById(Long flightId) {
+        flightRepository.deleteById(flightId);
     }
 
 }
