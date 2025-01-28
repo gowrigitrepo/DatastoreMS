@@ -3,12 +3,13 @@ package com.taf.DatastoreMS.Controller;
 import com.taf.DatastoreMS.Model.Flight;
 import com.taf.DatastoreMS.Repository.FlightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
-
+@RestController
+@RequestMapping("/flight")
 public class FlightController {
     @Autowired
     private final FlightRepository flightRepository;
@@ -17,24 +18,16 @@ public class FlightController {
         this.flightRepository = flightRepository;
     }
 
-    public List<Flight> getAllFights() {
-        return flightRepository.findAll();
+    @PostMapping("/save")
+    public ResponseEntity<String> saveData(@RequestBody Flight flight) {
+        flightRepository.save(flight);
+        return ResponseEntity.ok("Data saved successfully");
     }
 
-    public Optional<Flight> getFlightById(Long flightId) {
-        return flightRepository.findById(flightId);
-    }
-
-    public Flight addFlight(Flight flight) {
-        return flightRepository.save(flight);
-    }
-
-    public Flight updateFlight(Flight flight) {
-        return flightRepository.save(flight);
-    }
-
-    public void deleteFlightById(Long flightId) {
-        flightRepository.deleteById(flightId);
+    @GetMapping("fetch/{id}")
+    public ResponseEntity<Optional<Flight>> fetchData(@PathVariable Long id) {
+        Optional<Flight> flight = flightRepository.findById(id);
+        return ResponseEntity.ok(flight);
     }
 
 }

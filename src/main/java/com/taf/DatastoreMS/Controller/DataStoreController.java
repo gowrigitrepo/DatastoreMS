@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@RestController
-@RequestMapping("/datastore")
 public class DataStoreController {
     @Autowired
     private final UserRepository userRepository;
@@ -29,6 +27,19 @@ public class DataStoreController {
     public ResponseEntity<Optional<User>> fetchData(@PathVariable Long id) {
         Optional<User> user = userRepository.findById(id);
         return ResponseEntity.ok(user);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateData(@PathVariable Long id,@RequestBody User user) {
+        Optional<User> userToUpdate = userRepository.findById(id);
+        if (userToUpdate.isPresent()) {
+            User userData = userToUpdate.get();
+            userData.setEmail(user.getEmail());
+            userRepository.save(userData);
+        } else {
+            throw new RuntimeException("User not found with id to update" + id);
+        }
+        return ResponseEntity.ok("Data updated successfully");
     }
 
 }
