@@ -6,10 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/User")
+@RequestMapping("/user")
 public class UserController {
     @Autowired
     private final UserRepository userRepository;
@@ -30,7 +31,13 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping("/update")
+    @GetMapping("/fetch/all")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return ResponseEntity.ok(users);  // Return user list as JSON
+    }
+
+    @PutMapping("/update/{id}")
     public ResponseEntity<String> updateData(@PathVariable Long id,@RequestBody User user) {
         Optional<User> userToUpdate = userRepository.findById(id);
         if (userToUpdate.isPresent()) {

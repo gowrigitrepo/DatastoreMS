@@ -23,6 +23,9 @@ public class Booking {
     private Flight flight;
 
     @Column
+    private Integer noOfSeats;
+
+    @Column
     private String status;
 
     @CreationTimestamp
